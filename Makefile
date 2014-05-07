@@ -1,9 +1,31 @@
 #
 # Configuration
 #
-
 # CC
 CC=gcc
+#C编译器=gcc,用gcc工具进行编译
+CCOPT=-fno-strict-aliasing -Wstrict-prototypes -g
+CCOPTOPT=-O3
+#使用3级优化
+GLIBCFIX=-D_GNU_SOURCE
+CFLAGS=$(CCOPTOPT) $(CCOPT) $(GLIBCFIX)
+TARGETS=text test
+DEF_text=-lncuse
+#相当于宏替换，引入库函数
+DEF_test=-lcap
+#相当于宏替换，引入库函数
+$(patsubst  %.o, %, $@)
+#将以.o为后缀的文件替换成无后缀的自己
+.PHONY : all clean
+all:$(TARGETS)
+%.s:%.c
+		$(COMPILE.c)  $<  -S  -o $@
+%.o:%.c
+		$(COMPILE.c)  $(DEF_$(patsubst  %.o, %, $@)) $<  -o $@
+$(TARGETS):%: %.o
+		$(LINK.o)   $^   -o $@
+clean:
+		rm test test.o text text.o
 # Path to parent kernel include files directory
 LIBC_INCLUDE=/usr/include
 # Libraries
