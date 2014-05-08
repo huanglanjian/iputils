@@ -67,6 +67,7 @@ ENABLE_RDISC_SERVER=no
 # CCOPT=-fno-strict-aliasing -Wstrict-prototypes -Wall -Werror -g
 #-Wstrict-prototypes: 如果函数的声明或定义没有指出参数类型，编译器就发出警告
 CCOPT=-fno-strict-aliasing -Wstrict-prototypes -Wall -g
+#等号左边是Makefile中的变量
 CCOPTOPT=-O3
 #使用3级优化
 GLIBCFIX=-D_GNU_SOURCE
@@ -141,6 +142,7 @@ TAG:=$(shell date --date=$(TODAY) +s%Y%m%d)
 
 # -------------------------------------
 .PHONY: all ninfod clean distclean man html check-kernel modules snapshot
+#make 的“隐晦规则”,clean是个伪目标文件
 TARGETS=text test
 DEF_text=-lncuse
 #相当于宏替换，引入库函数
@@ -152,6 +154,7 @@ $(patsubst  %.o, %, $@)
 all: $(TARGETS)
 %.s: %.c
 	$(COMPILE.c) $< $(DEF_$(patsubst %.o,%,$@)) -S -o $@
+        #Makefile命令以一个Tab开始
         #$(DEF_$(patsubst %.o,%,$@))将库函数引入到gcc编译器中，$@通配符
 %.o: %.c
 	$(COMPILE.c) $< $(DEF_$(patsubst %.o,%,$@)) -o $@
