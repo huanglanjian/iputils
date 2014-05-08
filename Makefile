@@ -8,16 +8,17 @@ CC=gcc
 CFLAGS=$(CCOPTOPT) $(CCOPT) $(GLIBCFIX)
 
 # Path to parent kernel include files directory
+#母核路径包含文件的目录
 LIBC_INCLUDE=/usr/include
 # Libraries
 ADDLIB=
-# Linker flags
+# Linker flags 连接标志
 #Wl选项告诉编译器将后面的参数传递给链接器
 #-Wl,-Bstatic告诉链接器使用-Bstatic选项，该选项是告诉链接器，对接下来的-l选项使用静态链接
 LDFLAG_STATIC=-Wl,-Bstatic
 LDFLAG_DYNAMIC=-Wl,-Bdynamic
 #指定加载库
-LDFLAG_CAP=-lcap
+LDFLAG_CAP=-clap
 LDFLAG_GNUTLS=-lgnutls-openssl
 LDFLAG_CRYPTO=-lcrypto
 LDFLAG_IDN=-lidn
@@ -29,27 +30,36 @@ LDFLAG_SYSFS=-lsysfs
 #
 
 # Capability support (with libcap) [yes|static|no]
+#功能支持（与libcap的）[是|静态|否]
 USE_CAP=yes
 # sysfs support (with libsysfs - deprecated) [no|yes|static]
+#Sysfs 是 Linux 2.6 所提供的一种虚拟文件系统
 USE_SYSFS=no
 # IDN support (experimental) [no|yes|static]
+#国际化域名支持（实验）[是|静态|否]
 USE_IDN=no
 
 # Do not use getifaddrs [no|yes|static]
+#不使用获取本机地址函数
 WITHOUT_IFADDRS=no
 # arping default device (e.g. eth0) []
 ARPING_DEFAULT_DEVICE=
 
 # GNU TLS library for ping6 [yes|no|static]
+#GNU TLS库ping6[是|否|静态]
 USE_GNUTLS=yes
 # Crypto library for ping6 [shared|static]
+#对于ping6密码库[共享|静态]
 USE_CRYPTO=shared
 # Resolv library for ping6 [yes|static]
+#对于ping6 RESOLV库[是|静态]
 USE_RESOLV=yes
 # ping6 source routing (deprecated by RFC5095) [no|yes|RFC3542]
+#ping6源路由（由RFC5095不建议使用）[NO | YES| RFC3542]
 ENABLE_PING6_RTHDR=no
 
 # rdisc server (-r option) support [no|yes]
+#RDISC服务器（-r选项）支持[NO | YES]
 ENABLE_RDISC_SERVER=no
 
 # -------------------------------------
@@ -60,6 +70,7 @@ CCOPT=-fno-strict-aliasing -Wstrict-prototypes -Wall -g
 CCOPTOPT=-O3
 #使用3级优化
 GLIBCFIX=-D_GNU_SOURCE
+#-D gcc参数   _GNU_SOURCE宏
 DEFINES=
 LDLIB=
 
@@ -144,6 +155,7 @@ all: $(TARGETS)
         #$(DEF_$(patsubst %.o,%,$@))将库函数引入到gcc编译器中，$@通配符
 %.o: %.c
 	$(COMPILE.c) $< $(DEF_$(patsubst %.o,%,$@)) -o $@
+        #COMPILE.c是将高级语言转换为机器码的过程，这里使用的是gcc
 $(TARGETS): %: %.o
 	$(LINK.o) $^ $(LIB_$@) $(LDLIBS) -o $@
 
